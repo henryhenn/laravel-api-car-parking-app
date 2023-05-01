@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\VehicleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Auth;
@@ -27,4 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('profile', [Auth\ProfileController::class, 'show']);
     Route::put('profile', [Auth\ProfileController::class, 'update']);
     Route::put('password', Auth\PasswordUpdateController::class);
+
+    Route::apiResource('vehicles', VehicleController::class);
 });

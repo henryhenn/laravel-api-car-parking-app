@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ParkigResource;
+use App\Http\Resources\ParkingResource;
 use App\Models\Parking;
+use app\Services\ParkingPriceService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -30,20 +31,21 @@ class ParkingController extends Controller
         $parking = Parking::create($parkingData);
         $parking->load('vehicle', 'zone');
 
-        return ParkigResource::make($parking);
+        return ParkingResource::make($parking);
     }
 
     public function show(Parking $parking)
     {
-        return ParkigResource::make($parking);
+        return ParkingResource::make($parking);
     }
 
     public function stop(Parking $parking)
     {
         $parking->update([
-            'stop_time' => now()
+            'stop_time' => now(),
+            'total_price' => ParkingPriceService::calculatePrice($parking->zone_id, $parking->start_time)
         ]);
 
-        return ParkigResource::make($parking);
+        return ParkingResource::make($parking);
     }
 }

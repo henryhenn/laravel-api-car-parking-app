@@ -9,6 +9,9 @@ use app\Services\ParkingPriceService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/**
+ * @group Parking
+ */
 class ParkingController extends Controller
 {
     public function start(Request $request)

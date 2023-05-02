@@ -35,7 +35,7 @@ class VehicleTest extends TestCase
 
     public function testUserCanCreateVehicle()
     {
-        $user = User::factory()->create();
+        $user = $this->getUser();
 
         $response = $this->actingAs($user)->postJson('/api/v1/vehicles', [
             'plate_number' => 'AAA111'
@@ -56,7 +56,7 @@ class VehicleTest extends TestCase
 
     public function testUserCanUpdateTheirVehicle()
     {
-        $user = User::factory()->create();
+        $user = $this->getUser();
         $vehicle = Vehicle::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->putJson('/api/v1/vehicles/' . $vehicle->id, [
@@ -74,7 +74,7 @@ class VehicleTest extends TestCase
 
     public function testUserCanDeleteTheirVehicle()
     {
-        $user = User::factory()->create();
+        $user = $this->getUser();
         $vehicle = Vehicle::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->deleteJson('/api/v1/vehicles/' . $vehicle->id);
@@ -85,5 +85,14 @@ class VehicleTest extends TestCase
             'id' => $vehicle->id,
             'deleted_at' => null
         ])->assertDatabaseCount('vehicles', 0);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+     */
+    public function getUser(): \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+    {
+        $user = User::factory()->create();
+        return $user;
     }
 }

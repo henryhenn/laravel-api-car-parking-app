@@ -16,8 +16,8 @@ class ParkingTest extends TestCase
 
     public function testUserCanStartParking()
     {
-        $user = User::factory()->create();
-        $vehicle = Vehicle::factory()->create(['user_id' => $user->id]);
+        $user = $this->getUser();
+        $vehicle = $this->getVehicle($user);
         $zone = Zone::first();
 
         $response = $this->actingAs($user)->postJson('/api/v1/parkings/start', [
@@ -40,8 +40,8 @@ class ParkingTest extends TestCase
 
     public function testUerCanGetOngoingParkingWithCorrectPrice()
     {
-        $user = User::factory()->create();
-        $vehicle = Vehicle::factory()->create(['user_id' => $user->id]);
+        $user = $this->getUser();
+        $vehicle = $this->getVehicle($user);
         $zone = Zone::first();
 
         $this->actingAs($user)->postJson('/api/v1/parkings/start', [
@@ -66,8 +66,8 @@ class ParkingTest extends TestCase
 
     public function testUserCanStopParking()
     {
-        $user = User::factory()->create();
-        $vehicle = Vehicle::factory()->create(['user_id' => $user->id]);
+        $user = $this->getUser();
+        $vehicle = $this->getVehicle($user);
         $zone = Zone::first();
 
         $this->actingAs($user)->postJson('/api/v1/parkings/start', [
@@ -94,5 +94,15 @@ class ParkingTest extends TestCase
 
         $this->assertDatabaseCount('parkings', '1');
 
+    }
+
+    public function getUser(): \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+    {
+        return User::factory()->create();
+    }
+
+    public function getVehicle(\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection $user): \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+    {
+        return Vehicle::factory()->create(['user_id' => $user->id]);
     }
 }

@@ -13,7 +13,7 @@ class ProfileTest extends TestCase
 
     public function testUserCanGetTheirProfile()
     {
-        $user = User::factory()->create();
+        $user = $this->getUser();
 
         $response = $this->actingAs($user)->getJson('/api/v1/profile');
 
@@ -25,7 +25,7 @@ class ProfileTest extends TestCase
 
     public function testUserCanUpdateNameAndEmail()
     {
-        $user = User::factory()->create();
+        $user = $this->getUser();
 
         $response = $this->actingAs($user)->putJson('/api/v1/profile', [
             'name' => 'John Updated',
@@ -45,7 +45,7 @@ class ProfileTest extends TestCase
 
     public function testUserCanChangePassword()
     {
-        $user = User::factory()->create();
+        $user = $this->getUser();
 
         $response = $this->actingAs($user)->putJson('/api/v1/password', [
             'current_password' => 'password',
@@ -54,5 +54,14 @@ class ProfileTest extends TestCase
         ]);
 
         $response->assertStatus(202);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+     */
+    public function getUser(): \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+    {
+        $user = User::factory()->create();
+        return $user;
     }
 }
